@@ -139,7 +139,73 @@
     "question": "What sound does 'C' make in 'Cat'?",
     "image": "Cat",
     "description": "Choose the correct sound",
-    "options": ["kuh", "sss", "tuh", "aaa"],
+"options": ["kuh", "sss", "tuh", "aaa"],
     "correctAnswer": "kuh"
+  },
+  {
+    "Id": 17,
+    "levelId": "8",
+    "subject": "reading",
+    "type": "words",
+    "question": "Which word means 'a small animal that says meow'?",
+    "image": "Cat",
+    "description": "Choose the correct word",
+    "options": ["dog", "cat", "bird", "fish"],
+    "correctAnswer": "cat"
+  },
+  {
+    "Id": 18,
+    "levelId": "8",
+    "subject": "reading",
+    "type": "words",
+    "question": "What word describes something that is not big?",
+    "image": "Minimize",
+    "description": "Pick the word that means the opposite of big",
+    "options": ["large", "small", "huge", "giant"],
+    "correctAnswer": "small"
+  },
+  {
+    "Id": 19,
+    "levelId": "9",
+    "subject": "reading",
+    "type": "sentences",
+    "question": "Complete the sentence: 'The sun is ___'",
+    "image": "Sun",
+    "description": "Choose the word that best completes the sentence",
+    "options": ["cold", "bright", "dark", "wet"],
+    "correctAnswer": "bright"
+  },
+  {
+    "Id": 20,
+    "levelId": "9",
+    "subject": "reading",
+    "type": "sentences",
+    "question": "Which sentence is correct?",
+    "image": "CheckCircle",
+    "description": "Pick the sentence that makes sense",
+    "options": ["Birds can fly.", "Fish can walk.", "Cars can swim.", "Trees can run."],
+    "correctAnswer": "Birds can fly."
+  },
+  {
+    "Id": 21,
+    "levelId": "10",
+    "subject": "reading",
+    "type": "stories",
+    "question": "In the story 'The Three Bears', who ate the porridge?",
+    "image": "Book",
+    "description": "Think about the famous story",
+    "options": ["Goldilocks", "The Wolf", "Little Red", "Jack"],
+    "correctAnswer": "Goldilocks"
+  },
+  {
+    "Id": 22,
+    "levelId": "10",
+    "subject": "reading",
+    "type": "stories",
+    "question": "What happens at the beginning of most stories?",
+    "image": "BookOpen",
+    "description": "Think about how stories usually start",
+    "options": ["The end", "Once upon a time", "The middle", "Good bye"],
+    "correctAnswer": "Once upon a time"
   }
 ]
