@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
@@ -7,13 +8,13 @@ import ProgressBar from "@/components/molecules/ProgressBar";
 import Avatar from "@/components/molecules/Avatar";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import childrenService from "@/services/api/childrenService";
+import { useChild } from "@/contexts/ChildContext";
 import activitiesService from "@/services/api/activitiesService";
 import progressService from "@/services/api/progressService";
 import { format, subDays, isAfter } from "date-fns";
-
 const ParentDashboard = () => {
-  const [child, setChild] = useState(null);
+const navigate = useNavigate();
+  const { activeChild, allChildren } = useChild();
   const [activities, setActivities] = useState([]);
   const [progress, setProgress] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
@@ -22,27 +23,23 @@ const ParentDashboard = () => {
   const [timeFilter, setTimeFilter] = useState("week"); // week, month, all
 
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+loadDashboardData();
+  }, [activeChild]);
 
   const loadDashboardData = async () => {
+    if (!activeChild) return;
+
     try {
       setLoading(true);
       setError("");
 
-      const children = await childrenService.getAll();
-      const currentChild = children[0];
-      setChild(currentChild);
+      const childActivities = await activitiesService.getByChildId(activeChild.Id);
+      setActivities(childActivities);
 
-      if (currentChild) {
-        const childActivities = await activitiesService.getByChildId(currentChild.Id);
-        setActivities(childActivities);
+      const childProgress = await progressService.getByChildId(activeChild.Id);
+      setProgress(childProgress);
 
-        const childProgress = await progressService.getByChildId(currentChild.Id);
-        setProgress(childProgress);
-
-        generateWeeklyData(childActivities);
-      }
+      generateWeeklyData(childActivities);
     } catch (err) {
       setError("Failed to load dashboard data. Please try again.");
       console.error("Error loading dashboard:", err);
@@ -116,21 +113,30 @@ const ParentDashboard = () => {
   const todayMinutes = Math.round(getTimeSpentToday() / 60);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-warning/10 p-4 lg:p-8">
+<div className="min-h-screen bg-gradient-to-br from-background to-warning/10 p-4 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Avatar avatarId={child?.avatarId} size="lg" />
+            <Avatar avatarId={activeChild?.avatarId} size="lg" />
             <div>
               <h1 className="text-3xl font-display text-gray-800">
-                {child?.name}'s Progress Dashboard
+                {activeChild?.name}'s Progress Dashboard
               </h1>
               <p className="text-gray-600">Parent view • Last updated just now</p>
             </div>
           </div>
 
           <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/parent/manage-children')}
+              className="flex items-center space-x-2"
+            >
+              <ApperIcon name="Settings" size={16} />
+              <span>Manage Children</span>
+            </Button>
             {["week", "month", "all"].map((filter) => (
               <Button
                 key={filter}
@@ -144,6 +150,41 @@ const ParentDashboard = () => {
             ))}
           </div>
         </div>
+
+        {/* Children Summary Cards */}
+        {allChildren.length > 1 && (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {allChildren.map((child) => (
+              <motion.div
+                key={child.Id}
+                whileHover={{ y: -2 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card className={`p-4 ${activeChild?.Id === child.Id ? 'border-primary bg-primary/5' : ''}`}>
+                  <div className="flex items-center space-x-3">
+                    <Avatar avatarId={child.avatarId} size="md" />
+                    <div className="flex-1">
+                      <h3 className="font-display text-lg text-gray-800">
+                        {child.name}
+                      </h3>
+                      <div className="flex items-center space-x-3 text-sm text-gray-600">
+                        <span>Level {child.currentLevel}</span>
+                        <div className="flex items-center space-x-1">
+                          <ApperIcon name="Star" size={12} className="text-accent" />
+                          <span>{child.totalStars}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {activeChild?.Id === child.Id && (
+                      <ApperIcon name="Eye" size={16} className="text-primary" />
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Key Metrics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useChild } from "@/contexts/ChildContext";
+import activitiesService from "@/services/api/activitiesService";
+import childrenService from "@/services/api/childrenService";
+import progressService from "@/services/api/progressService";
 import ApperIcon from "@/components/ApperIcon";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
-import Avatar from "@/components/molecules/Avatar";
-import StarRating from "@/components/molecules/StarRating";
-import ProgressBar from "@/components/molecules/ProgressBar";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import childrenService from "@/services/api/childrenService";
-import activitiesService from "@/services/api/activitiesService";
-import progressService from "@/services/api/progressService";
-
+import Avatar from "@/components/molecules/Avatar";
+import ProgressBar from "@/components/molecules/ProgressBar";
+import StarRating from "@/components/molecules/StarRating";
 const ProfilePage = () => {
-  const [child, setChild] = useState(null);
+const { activeChild, refreshChildren } = useChild();
   const [activities, setActivities] = useState([]);
   const [progress, setProgress] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("1");
@@ -22,29 +23,25 @@ const ProfilePage = () => {
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
     loadProfileData();
   }, []);
 
-  const loadProfileData = async () => {
+const loadProfileData = async () => {
+    if (!activeChild) return;
+
     try {
       setLoading(true);
       setError("");
 
-      const children = await childrenService.getAll();
-      const currentChild = children[0];
-      setChild(currentChild);
-      setSelectedAvatar(currentChild?.avatarId || "1");
-      setNewName(currentChild?.name || "");
+      setSelectedAvatar(activeChild.avatarId || "1");
+      setNewName(activeChild.name || "");
 
-      if (currentChild) {
-        const childActivities = await activitiesService.getByChildId(currentChild.Id);
-        setActivities(childActivities);
+      const childActivities = await activitiesService.getByChildId(activeChild.Id);
+      setActivities(childActivities);
 
-        const childProgress = await progressService.getByChildId(currentChild.Id);
-        setProgress(childProgress);
-      }
+      const childProgress = await progressService.getByChildId(activeChild.Id);
+      setProgress(childProgress);
     } catch (err) {
       setError("Failed to load profile data. Please try again.");
       console.error("Error loading profile:", err);
@@ -53,27 +50,31 @@ const ProfilePage = () => {
     }
   };
 
-  const handleAvatarChange = async (avatarId) => {
+const handleAvatarChange = async (avatarId) => {
     try {
       setSelectedAvatar(avatarId);
-      if (child) {
-        await childrenService.update(child.Id, { avatarId });
-        setChild({ ...child, avatarId });
+      if (activeChild) {
+        await childrenService.update(activeChild.Id, { avatarId });
+        await refreshChildren();
+        toast.success('Avatar updated successfully!');
       }
     } catch (err) {
       console.error("Error updating avatar:", err);
+      toast.error('Failed to update avatar');
     }
   };
 
-  const handleNameChange = async () => {
+const handleNameChange = async () => {
     try {
-      if (child && newName.trim()) {
-        await childrenService.update(child.Id, { name: newName.trim() });
-        setChild({ ...child, name: newName.trim() });
+      if (activeChild && newName.trim()) {
+        await childrenService.update(activeChild.Id, { name: newName.trim() });
+        await refreshChildren();
         setIsEditingName(false);
+        toast.success('Name updated successfully!');
       }
     } catch (err) {
       console.error("Error updating name:", err);
+      toast.error('Failed to update name');
     }
   };
 
@@ -120,9 +121,9 @@ const ProfilePage = () => {
                     <ApperIcon name="Check" size={16} />
                   </Button>
                 </div>
-              ) : (
+) : (
                 <div className="flex items-center justify-center space-x-2">
-                  <h1 className="text-3xl font-display text-gray-800">{child?.name}</h1>
+                  <h1 className="text-3xl font-display text-gray-800">{activeChild?.name}</h1>
                   <Button 
                     variant="ghost" 
                     size="sm"
@@ -132,7 +133,7 @@ const ProfilePage = () => {
                   </Button>
                 </div>
               )}
-              <p className="text-gray-600">Age {child?.age} • Level {child?.currentLevel}</p>
+              <p className="text-gray-600">Age {activeChild?.age} • Level {activeChild?.currentLevel}</p>
             </div>
 
             <div className="flex items-center justify-center space-x-8">

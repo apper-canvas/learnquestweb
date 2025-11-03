@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ApperIcon from "@/components/ApperIcon";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import StarRating from "@/components/molecules/StarRating";
-import Avatar from "@/components/molecules/Avatar";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import childrenService from "@/services/api/childrenService";
+import { useChild } from "@/contexts/ChildContext";
 import activitiesService from "@/services/api/activitiesService";
 import progressService from "@/services/api/progressService";
-
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Avatar from "@/components/molecules/Avatar";
+import StarRating from "@/components/molecules/StarRating";
 const HomePage = () => {
   const navigate = useNavigate();
-  const [child, setChild] = useState(null);
+const { activeChild } = useChild();
   const [recentActivities, setRecentActivities] = useState([]);
   const [progress, setProgress] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,26 +23,21 @@ const HomePage = () => {
     loadDashboardData();
   }, []);
 
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
+    if (!activeChild) return;
+
     try {
       setLoading(true);
       setError("");
 
-      // Load child data (using first child for demo)
-      const children = await childrenService.getAll();
-      const currentChild = children[0];
-      setChild(currentChild);
+      // Load recent activities for active child
+      const activities = await activitiesService.getByChildId(activeChild.Id);
+      const sortedActivities = activities.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+      setRecentActivities(sortedActivities.slice(0, 3));
 
-      if (currentChild) {
-        // Load recent activities
-        const activities = await activitiesService.getByChildId(currentChild.Id);
-        const sortedActivities = activities.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-        setRecentActivities(sortedActivities.slice(0, 3));
-
-        // Load progress
-        const childProgress = await progressService.getByChildId(currentChild.Id);
-        setProgress(childProgress);
-      }
+      // Load progress for active child
+      const childProgress = await progressService.getByChildId(activeChild.Id);
+      setProgress(childProgress);
     } catch (err) {
       setError("Failed to load dashboard data. Please try again.");
       console.error("Error loading dashboard:", err);
@@ -87,12 +81,12 @@ const HomePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/10 p-4 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Welcome Header */}
-        <div className="text-center space-y-4">
+<div className="text-center space-y-4">
           <div className="flex items-center justify-center space-x-4">
-            <Avatar avatarId={child?.avatarId} size="xl" />
+            <Avatar avatarId={activeChild?.avatarId} size="xl" />
             <div>
               <h1 className="text-3xl lg:text-4xl font-display text-gray-800">
-                {getGreeting()}, {child?.name}!
+                {getGreeting()}, {activeChild?.name}!
               </h1>
               <p className="text-lg text-gray-600">{getRandomEncouragement()}</p>
             </div>
@@ -102,7 +96,7 @@ const HomePage = () => {
             <div>
               <div className="flex items-center justify-center space-x-1">
                 <ApperIcon name="Star" className="text-accent fill-accent" size={20} />
-                <span className="text-2xl font-display text-accent">{child?.totalStars}</span>
+                <span className="text-2xl font-display text-accent">{activeChild?.totalStars}</span>
               </div>
               <p className="text-sm text-gray-600">Total Stars</p>
             </div>
@@ -110,7 +104,7 @@ const HomePage = () => {
             <div>
               <div className="flex items-center justify-center space-x-1">
                 <ApperIcon name="TrendingUp" className="text-success" size={20} />
-                <span className="text-2xl font-display text-success">Level {child?.currentLevel}</span>
+                <span className="text-2xl font-display text-success">Level {activeChild?.currentLevel}</span>
               </div>
               <p className="text-sm text-gray-600">Current Level</p>
             </div>
