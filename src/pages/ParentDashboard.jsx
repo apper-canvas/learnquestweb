@@ -277,9 +277,9 @@ loadDashboardData();
 
             {todayMinutes > 0 && (
               <div className="bg-gradient-to-r from-success/10 to-success/5 border border-success/20 rounded-xl p-4 text-center">
-                <ApperIcon name="CheckCircle" className="text-success mx-auto mb-2" size={24} />
+<ApperIcon name="CheckCircle" className="text-success mx-auto mb-2" size={24} />
                 <p className="text-success font-medium">
-                  Great job today! {child?.name} practiced for {todayMinutes} minutes.
+                  Great job today! {activeChild?.name} practiced for {todayMinutes} minutes.
                 </p>
               </div>
             )}
