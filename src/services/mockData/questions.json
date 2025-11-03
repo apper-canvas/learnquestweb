@@ -41,10 +41,76 @@
     "image": "Plus",
     "description": "What do you get when you add these?",
     "options": [3, 4, 5, 6],
+"correctAnswer": 5
+  },
+  {
+    "Id": 8,
+    "levelId": "3",
+    "subject": "math",
+    "type": "subtraction",
+    "question": "5 - 2 = ?",
+    "image": "Minus",
+    "description": "Take away to find the answer",
+    "options": [2, 3, 4, 1],
+    "correctAnswer": 3
+  },
+  {
+    "Id": 9,
+    "levelId": "3",
+    "subject": "math",
+    "type": "subtraction",
+    "question": "6 - 4 = ?",
+    "image": "Minus",
+    "description": "How many are left?",
+    "options": [1, 2, 3, 4],
+    "correctAnswer": 2
+  },
+  {
+    "Id": 10,
+    "levelId": "4",
+    "subject": "math",
+    "type": "addition",
+    "question": "7 + 5 = ?",
+    "image": "Plus",
+    "description": "Add these bigger numbers together",
+    "options": [11, 12, 13, 10],
+    "correctAnswer": 12
+  },
+  {
+    "Id": 11,
+    "levelId": "4",
+    "subject": "math",
+    "type": "addition",
+    "question": "8 + 3 = ?",
+    "image": "Plus",
+    "description": "What is the total?",
+    "options": [9, 10, 11, 12],
+    "correctAnswer": 11
+  },
+  {
+    "Id": 12,
+    "levelId": "5",
+    "subject": "math",
+    "type": "subtraction",
+    "question": "10 - 3 = ?",
+    "image": "Minus",
+    "description": "Subtract to find the answer",
+    "options": [6, 7, 8, 9],
+    "correctAnswer": 7
+  },
+  {
+    "Id": 13,
+    "levelId": "5",
+    "subject": "math",
+    "type": "subtraction",
+    "question": "9 - 4 = ?",
+    "image": "Minus",
+    "description": "How many remain?",
+    "options": [4, 5, 6, 7],
     "correctAnswer": 5
   },
   {
-    "Id": 5,
+"Id": 14,
     "levelId": "6",
     "subject": "reading",
     "type": "letters",
@@ -54,8 +120,8 @@
     "options": ["A", "C", "D", "E"],
     "correctAnswer": "C"
   },
-  {
-    "Id": 6,
+{
+    "Id": 15,
     "levelId": "6",
     "subject": "reading",
     "type": "letters",
@@ -65,8 +131,8 @@
     "options": ["A", "B", "C", "D"],
     "correctAnswer": "A"
   },
-  {
-    "Id": 7,
+{
+    "Id": 16,
     "levelId": "7",
     "subject": "reading",
     "type": "phonics",
