@@ -1,0 +1,79 @@
+[
+  {
+    "Id": 1,
+    "levelId": "1",
+    "subject": "math",
+    "type": "counting",
+    "question": "How many stars do you see?",
+    "image": "Star",
+    "description": "Count all the stars",
+    "options": [3, 5, 4, 6],
+    "correctAnswer": 4
+  },
+  {
+    "Id": 2,
+    "levelId": "1",
+    "subject": "math",
+    "type": "counting",
+    "question": "Count the hearts",
+    "image": "Heart",
+    "description": "How many hearts are there?",
+    "options": [2, 3, 4, 5],
+    "correctAnswer": 3
+  },
+  {
+    "Id": 3,
+    "levelId": "2",
+    "subject": "math",
+    "type": "addition",
+    "question": "2 + 3 = ?",
+    "image": "Plus",
+    "description": "Add these numbers together",
+    "options": [4, 5, 6, 7],
+    "correctAnswer": 5
+  },
+  {
+    "Id": 4,
+    "levelId": "2",
+    "subject": "math",
+    "type": "addition",
+    "question": "4 + 1 = ?",
+    "image": "Plus",
+    "description": "What do you get when you add these?",
+    "options": [3, 4, 5, 6],
+    "correctAnswer": 5
+  },
+  {
+    "Id": 5,
+    "levelId": "6",
+    "subject": "reading",
+    "type": "letters",
+    "question": "Which letter comes after 'B'?",
+    "image": "BookOpen",
+    "description": "Pick the next letter in the alphabet",
+    "options": ["A", "C", "D", "E"],
+    "correctAnswer": "C"
+  },
+  {
+    "Id": 6,
+    "levelId": "6",
+    "subject": "reading",
+    "type": "letters",
+    "question": "What letter does 'Apple' start with?",
+    "image": "Apple",
+    "description": "Choose the first letter",
+    "options": ["A", "B", "C", "D"],
+    "correctAnswer": "A"
+  },
+  {
+    "Id": 7,
+    "levelId": "7",
+    "subject": "reading",
+    "type": "phonics",
+    "question": "What sound does 'C' make in 'Cat'?",
+    "image": "Cat",
+    "description": "Choose the correct sound",
+    "options": ["kuh", "sss", "tuh", "aaa"],
+    "correctAnswer": "kuh"
+  }
+]
